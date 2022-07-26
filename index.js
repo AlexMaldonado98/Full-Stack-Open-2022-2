@@ -1,6 +1,12 @@
-const { application } = require('express');
+const { application, json } = require('express');
 const express = require('express');
 const app = express();
+app.use(express.json());
+
+const idGen = () => {
+    const id = Math.round(Math.random() * 1000);
+    return id
+}
 
 let persons = [
     {
@@ -50,6 +56,18 @@ app.delete('/api/persons/:id',(request,response) => {
     const id = Number(request.params.id);
     persons = persons.filter(person => person.id !== id)
     response.status(204).end();
+})
+
+app.post('/api/persons/',(request,response) => {
+    const body = request.body
+    const person = {
+        name: body.name || 'NaN',
+        number: body.number || 'NaN',
+        id: idGen()
+    }
+    persons = persons.concat(person);
+    response.json(person);
+
 })
 
 const PORT = 3001;
