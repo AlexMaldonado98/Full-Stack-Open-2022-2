@@ -16,10 +16,12 @@ app.use(express.json(), cors());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :postData'));
 
 app.get('/info', (request, response) => {
-    response.send(`
-        <p>Phonebook has info for ${persons.length} people </p>
-        <p>${new Date()}</p>
-    `);
+    Person.find({}).then(result => {
+        response.send(`
+            <p>Phonebook has info for ${result.length} people </p>
+            <p>${new Date()}</p>
+        `);
+    })
 });
 
 app.get('/api/persons', (request, response) => {
@@ -58,9 +60,8 @@ app.post('/api/persons/', (request, response) => {
     const body = request.body;
 
     if (!body.name || !body.number) {
-        return response.status(400).json({
-            error: 'content missing'
-        });
+        console.log('entre');
+        return response.status(400).json({error: 'content missing'});
     }
 
     const person = new Person({
