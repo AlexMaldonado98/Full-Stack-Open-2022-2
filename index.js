@@ -28,12 +28,12 @@ app.get('/api/persons', (request, response) => {
     });
 });
 
-app.get('/api/persons/:id', (request, response,next) => {
-    const {id} = request.params;
+app.get('/api/persons/:id', (request, response, next) => {
+    const { id } = request.params;
     Person.findById(id).then(result => {
-        if(result){
+        if (result) {
             response.json(result)
-        }else{
+        } else {
             response.status(404).end();
         }
     }).catch(error => {
@@ -41,12 +41,12 @@ app.get('/api/persons/:id', (request, response,next) => {
     });
 });
 
-app.delete('/api/persons/:id', (request, response,next) => {
-    const {id} = request.params
+app.delete('/api/persons/:id', (request, response, next) => {
+    const { id } = request.params
     Person.findByIdAndDelete(id).then(result => {
-        if(result){
+        if (result) {
             response.status(204).end();
-        }else{
+        } else {
             response.status(404).end();
         }
     }).catch(error => {
@@ -73,6 +73,22 @@ app.post('/api/persons/', (request, response) => {
     });
 
 })
+
+app.put('/api/persons/:id', (request, response,next) => {
+    const { id } = request.params;
+    const body = request.body
+
+    const person = {
+        number: body.number
+    }
+
+    Person.findByIdAndUpdate(id, person, { new: true })
+    .then(result => {
+        response.json(result)
+    }).catch(error => next(error));
+})
+
+
 
 app.use(notFound);
 
