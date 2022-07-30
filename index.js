@@ -7,7 +7,6 @@ const Person = require('./models/person');
 const app = express();
 const idError = require('./middleware/idError');
 const notFound = require('./middleware/notFound');
-let persons = [];
 
 morgan.token("postData", (request) => request.method === 'POST' ? JSON.stringify(request.body) : '');
 
@@ -17,6 +16,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :p
 
 app.get('/info', (request, response) => {
     Person.find({}).then(result => {
+
         response.send(`
             <p>Phonebook has info for ${result.length} people </p>
             <p>${new Date()}</p>
