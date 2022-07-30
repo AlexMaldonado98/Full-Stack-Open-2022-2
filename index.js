@@ -60,8 +60,8 @@ app.post('/api/persons/', (request, response,next) => {
     const body = request.body;
 
     const person = new Person({
-        name: body.name || 'NaN',
-        number: body.number || 'NaN'
+        name: body.name,
+        number: body.number
     })
 
     person.save()
@@ -79,7 +79,7 @@ app.put('/api/persons/:id', (request, response,next) => {
         number: body.number
     }
 
-    Person.findByIdAndUpdate(id, person, { new: true })
+    Person.findByIdAndUpdate(id, person, { new: true, runValidators: true, context: 'query' })
     .then(result => {
         response.json(result)
     }).catch(error => next(error));
