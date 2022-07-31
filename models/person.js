@@ -1,15 +1,17 @@
+/*eslint no-undef: "error"*/
+
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
-const URL = process.env.MONGODB_URI
+const URL = process.env.MONGODB_URI;
 
 mongoose.connect(URL)
-    .then(result => {
-        console.log('connected to MongoDB')
+    .then(() => {
+        console.log('connected to MongoDB');
     })
     .catch((error) => {
-        console.log('error connecting to MongoDB:', error.message)
-    })
+        console.log('error connecting to MongoDB:', error);
+    });
 
 const personSchema = new mongoose.Schema({
     name: {
@@ -31,9 +33,13 @@ personSchema.set('toJSON',{
     transform: (document,returnedObject) => {
         returnedObject.id = returnedObject._id.toString();
         delete returnedObject._id;
-        delete returnedObject.__v
+        delete returnedObject.__v;
     }
 });
 
+
+process.on('unCauthErro',() => {
+    mongoose.connection.disconnect();
+});
 
 module.exports = mongoose.model('Person', personSchema);
